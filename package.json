@@ -1,0 +1,17 @@
+{
+  "name": "image2video-lite",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspace=frontend && npm install --workspace=backend",
+    "dev": "npx concurrently \"npm:start --workspace=frontend\" \"npm:start --workspace=backend\"",
+    "start": "npm --workspace=backend start",
+    "build": "npm --workspace=frontend build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
