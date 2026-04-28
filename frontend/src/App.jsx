@@ -52,8 +52,12 @@ function App() {
 
     try {
       const response = await fetch('/api/render', { method: 'POST', body: formData });
-      const json = await response.json();
-      if (!response.ok) throw new Error(json.error || 'Falha ao enviar');
+      const contentType = response.headers.get('content-type') || '';
+      const json = contentType.includes('application/json') ? await response.json() : null;
+      if (!response.ok) {
+        const message = json?.error || (await response.text()) || 'Falha ao enviar';
+        throw new Error(message);
+      }
       setJobId(json.jobId);
       setStatus('queued');
       pollStatus(json.jobId);
@@ -67,8 +71,12 @@ function App() {
   const pollStatus = async (id) => {
     try {
       const response = await fetch(`/api/status/${id}`);
-      const json = await response.json();
-      if (!response.ok) throw new Error(json.error || 'Falha ao consultar status');
+      const contentType = response.headers.get('content-type') || '';
+      const json = contentType.includes('application/json') ? await response.json() : null;
+      if (!response.ok) {
+        const message = json?.error || (await response.text()) || 'Falha ao consultar status';
+        throw new Error(message);
+      }
       setStatus(json.status);
       setProgress(json.progress || (json.status === 'queued' ? 20 : 50));
       if (json.status === 'done' && json.downloadUrl) {
