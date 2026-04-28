@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 const MAX_IMAGES = 10;
 const MAX_TOTAL_SECONDS = 30;
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 function App() {
   const [images, setImages] = useState([]);
@@ -51,7 +52,7 @@ function App() {
     setDownloadUrl('');
 
     try {
-      const response = await fetch('/api/render', { method: 'POST', body: formData });
+      const response = await fetch(`${API_BASE}/render`, { method: 'POST', body: formData });
       const contentType = response.headers.get('content-type') || '';
       const json = contentType.includes('application/json') ? await response.json() : null;
       if (!response.ok) {
@@ -70,7 +71,7 @@ function App() {
 
   const pollStatus = async (id) => {
     try {
-      const response = await fetch(`/api/status/${id}`);
+      const response = await fetch(`${API_BASE}/status/${id}`);
       const contentType = response.headers.get('content-type') || '';
       const json = contentType.includes('application/json') ? await response.json() : null;
       if (!response.ok) {
@@ -80,10 +81,11 @@ function App() {
       setStatus(json.status);
       setProgress(json.progress || (json.status === 'queued' ? 20 : 50));
       if (json.status === 'done' && json.downloadUrl) {
-        setDownloadUrl(json.downloadUrl);
+        const downloadLink = json.downloadUrl.startsWith('http') ? json.downloadUrl : `${API_BASE}${json.downloadUrl}`;
+        setDownloadUrl(downloadLink);
         setStatus('completed');
         setProgress(100);
-        window.location.href = json.downloadUrl;
+        window.location.href = downloadLink;
         return;
       }
       if (json.status === 'error') {
