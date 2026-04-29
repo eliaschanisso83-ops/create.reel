@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useStorageUrl } from './useStorageUrl';
+import { error as supabaseError } from './supabaseClient';
 
 const MAX_IMAGES = 10;
 const MAX_TOTAL_SECONDS = 30;
@@ -15,7 +16,7 @@ function App() {
   const [status, setStatus] = useState(null);
   const [progress, setProgress] = useState(0);
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(supabaseError || '');
   const [jobId, setJobId] = useState('');
 
   const totalTime = useMemo(() => images.length * duration, [images, duration]);
@@ -111,6 +112,14 @@ function App() {
       </header>
 
       <main>
+        {error && (
+          <section className="error-banner">
+            <strong>⚠️ Erro de Configuração:</strong> {error}
+            <br />
+            <small>Se você é administrador, configure as variáveis de ambiente VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Vercel.</small>
+          </section>
+        )}
+
         <section className="panel drop-area" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
           <strong>Arraste e solte até {MAX_IMAGES} imagens</strong>
           <span>ou clique para selecionar</span>

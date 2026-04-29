@@ -29,24 +29,75 @@ npm run install:all
 - Configure as políticas do bucket para permitir uploads
 
 ### 3. Variáveis de ambiente
-Defina no Vercel (para produção) ou localmente usando um arquivo `.env`:
-- `SUPABASE_URL`: URL do seu projeto Supabase
-- `SUPABASE_ANON_KEY`: Chave anônima do Supabase
 
-Crie um arquivo `.env` a partir de `.env.example`:
+#### **Desenvolvimento Local**
+
+Cria arquivo `.env` na raiz (ou `backend/.env` e `frontend/.env.local`):
 ```bash
-cp .env.example .env
+# backend/.env
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_ANON_KEY=sua_chave_anonima
+PORT=3000
+
+# frontend/.env.local
+VITE_SUPABASE_URL=https://seu-projeto.supabase.co
+VITE_SUPABASE_ANON_KEY=sua_chave_anonima
+VITE_API_URL=http://localhost:3000/api
 ```
-Preencha `SUPABASE_URL` e `SUPABASE_ANON_KEY` no arquivo.
+
+#### **Produção (Vercel)**
+
+👉 **[Ver guia completo de configuração](VERCEL_ENV_SETUP.md)**
+
+Adicione no Vercel → Settings → Environment Variables:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_API_URL` (URL do seu backend)
 
 ### 4. Executar localmente
 ```bash
 npm run dev
 ```
 
+Servidor rodará em:
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:3000
+
 ### 5. Deploy
-- Frontend: Vercel (já configurado)
-- Backend: Use Railway, Fly.io ou similar para hospedar o backend Node.js
+
+#### Frontend (Vercel)
+- Já configurado automaticamente
+- Deploy ao pushar para `main`
+
+#### Backend (Railway, Fly.io, etc)
+- Configure as mesmas env vars na plataforma de hospedagem
+- Use o comando `npm run start` para início
+
+---
+
+## Arquivos importantes
+
+- [TESTING.md](TESTING.md) - Guia de teste local
+- [VERCEL_ENV_SETUP.md](VERCEL_ENV_SETUP.md) - Setup de variáveis no Vercel
+- [supabase-setup.sql](supabase-setup.sql) - Script SQL para banco
+
+---
+
+## Motivo: Se app fica em branco no Vercel
+
+**Causa**: Variáveis de ambiente não configuradas
+
+**Solução**: [Seguir guia VERCEL_ENV_SETUP.md](VERCEL_ENV_SETUP.md)
+
+---
+
+## Tecnologias
+
+- **Frontend**: React + Vite + Supabase.js
+- **Backend**: Node.js + Express + FFmpeg
+- **Banco**: Supabase (PostgreSQL + Storage)
+- **Deploy**: Vercel (Frontend) + Railway/Fly.io (Backend)
+
 
 ## Funcionalidades
 - Upload de imagens e música

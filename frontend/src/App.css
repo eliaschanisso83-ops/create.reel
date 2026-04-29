@@ -217,6 +217,23 @@ main {
   margin: 0;
 }
 
+.error-banner {
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.error-banner small {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 18px;
