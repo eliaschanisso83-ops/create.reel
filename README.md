@@ -29,10 +29,15 @@ npm run install:all
 - Configure as políticas do bucket para permitir uploads
 
 ### 3. Variáveis de ambiente
-Defina no Vercel (para produção) ou localmente:
+Defina no Vercel (para produção) ou localmente usando um arquivo `.env`:
 - `SUPABASE_URL`: URL do seu projeto Supabase
 - `SUPABASE_ANON_KEY`: Chave anônima do Supabase
-- `SUPABASE_SERVICE_ROLE_KEY`: Chave de serviço (opcional, para operações administrativas)
+
+Crie um arquivo `.env` a partir de `.env.example`:
+```bash
+cp .env.example .env
+```
+Preencha `SUPABASE_URL` e `SUPABASE_ANON_KEY` no arquivo.
 
 ### 4. Executar localmente
 ```bash

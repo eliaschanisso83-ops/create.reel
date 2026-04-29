@@ -6,14 +6,23 @@ import fs from 'fs';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
+import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Erro: SUPABASE_URL e SUPABASE_ANON_KEY não foram definidos. Crie um arquivo .env ou defina as variáveis de ambiente.');
+  process.exit(1);
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const TEMP_DIR = path.join(os.tmpdir(), 'image2video-lite');
@@ -335,6 +344,20 @@ function cleanupJob(jobId) {
 }
 
 const PORT = process.env.PORT || 4000;
+
+// Verificar FFmpeg apenas em produção (em Vercel já vem instalado por padrão)
+if (process.env.NODE_ENV === 'production') {
+  try {
+    execSync('ffmpeg -version', { stdio: 'ignore' });
+  } catch (err) {
+    console.error('Erro: FFmpeg não encontrado. Instale o FFmpeg para que o backend gere vídeos.');
+    process.exit(1);
+  }
+} else {
+  console.warn('⚠️  FFmpeg não disponível localmente. Será necessário instalar ffmpeg para gerar vídeos localmente.');
+  console.warn('Em Vercel, FFmpeg já está instalado por padrão.');
+}
+
 app.listen(PORT, () => {
   console.log(`Backend rodando em http://localhost:${PORT}`);
 });
